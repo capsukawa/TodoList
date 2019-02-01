@@ -1,7 +1,7 @@
 {
   "name": "TodoList",
-  "version": "0.0.1",
-  "author": "Ionic Framework",
+  "version": "0.0.2",
+  "author": "Alexandre Cleyet-Merle & Arnaud Vallon",
   "homepage": "http://ionicframework.com/",
   "scripts": {
     "ng": "ng",
@@ -27,11 +27,12 @@
     "@ionic/pro": "2.0.4",
     "core-js": "^2.5.4",
     "rxjs": "~6.3.3",
+    "rxjs-compat": "^6.4.0",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
     "@angular-devkit/architect": "~0.11.4",
-    "@angular-devkit/build-angular": "~0.11.4",
+    "@angular-devkit/build-angular": "^0.13.0",
     "@angular-devkit/core": "~7.1.4",
     "@angular-devkit/schematics": "~7.1.4",
     "@angular/cli": "~7.1.4",
@@ -57,5 +58,5 @@
     "tslint": "~5.12.0",
     "typescript": "~3.1.6"
   },
-  "description": "An Ionic project"
+  "description": "TodoList with Ionic Framework"
 }
