@@ -21,6 +21,7 @@ export class Tab2Page implements OnInit {
 
   openList(uuid) {
     console.log(uuid);
+    this.navCtrl.navigateForward(`list/${uuid}`);
   }
 
   getNumberOfElements(uuid) {
