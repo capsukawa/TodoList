@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TodoServiceProvider, TodoList } from '../todo.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab2',
@@ -8,16 +9,25 @@ import { TodoServiceProvider, TodoList } from '../todo.service';
 })
 
 export class Tab2Page implements OnInit {
-  constructor(private todoservice: TodoServiceProvider) {}
+  lists: TodoList[];
+
+  constructor(
+    private todoservice: TodoServiceProvider, private navCtrl: NavController
+  ) {}
 
   ngOnInit() {
-    
+    this.todoservice.getList().subscribe(lists => this.lists = lists);
   }
 
-  openList() {
-    console.log('bloup');
+  openList(uuid) {
+    console.log(uuid);
   }
 
+  getNumberOfElements(uuid) {
+    let n: number;
+    this.todoservice.getTodos(uuid).subscribe(list => n = list.length);
+    return n;
+  }
 
 
 }
