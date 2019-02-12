@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { TodoServiceProvider, TodoItem } from '../todo.service';
 
 @Component({
   selector: 'app-list',
@@ -9,12 +9,16 @@ import { ActivatedRoute } from '@angular/router';
 })
 
 export class ListPage implements OnInit {
-  constructor(private route: ActivatedRoute) {}
+  items: TodoItem[];
+  listName: String;
+
+  constructor(private route: ActivatedRoute, private todoservice: TodoServiceProvider) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       const id = params['id'];
-      console.log(id);
+      this.todoservice.getTodos(id).subscribe(items => this.items = items);
+      this.todoservice.getListName(id).subscribe(listName => this.listName = listName);
     });
   }
 
