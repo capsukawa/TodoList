@@ -29,7 +29,8 @@ export class TodoServiceProvider {
         {
           uuid : '7dc94eb4-d4e9-441b-b06b-0ca29738c8d2',
           name : 'Item 1-1',
-          complete : false
+          complete : false,
+          desc: 'je suis sans famille et je m appelle remi et je me balade dans la vie'
         },
         {
           uuid : '20c09bdd-1cf8-43b0-9111-977fc4d343bc',

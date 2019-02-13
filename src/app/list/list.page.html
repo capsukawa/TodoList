@@ -1,12 +1,39 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button routerLink='/tabs/tab2'></ion-back-button>
     </ion-buttons>
     <ion-title>{{listName}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
+    <div *ngFor='let c of items'>
+      <ion-item-sliding><ion-item>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              {{c.name}}
+                <ion-item>
+                    <ion-checkbox style="float: right" [(ngModel)]="c.complete"></ion-checkbox>
+                </ion-item>
+            </ion-card-title>
+            
+            
+          </ion-card-header>
+          
+          <ion-card-content>
+              {{c.desc}}
+          </ion-card-content>
+        </ion-card>
+      </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option (click)="deleteCard(c.uuid)">
+            Supprimer
+            <ion-icon class="trashicon" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </div>
 
 </ion-content>

@@ -22,4 +22,7 @@ export class ListPage implements OnInit {
     });
   }
 
+  deleteCard(item) {
+    console.log(item);
+  }
 }
