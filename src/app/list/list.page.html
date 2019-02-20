@@ -8,32 +8,36 @@
 </ion-header>
 
 <ion-content padding>
-    <div *ngFor='let c of items'>
-      <ion-item-sliding><ion-item>
+  <div *ngFor='let c of items; let i = index'>
+    <ion-item-sliding>
+      <ion-item>
         <ion-card>
           <ion-card-header>
             <ion-card-title>
               {{c.name}}
-                <ion-item>
-                    <ion-checkbox style="float: right" [(ngModel)]="c.complete"></ion-checkbox>
-                </ion-item>
             </ion-card-title>
-            
-            
+            <ng-container>
+              <ion-checkbox class="mycheckbox" [(ngModel)]="c.complete"></ion-checkbox>
+            </ng-container>
           </ion-card-header>
-          
-          <ion-card-content>
-              {{c.desc}}
+
+          <ion-card-content class="content" (click)="isInEditMode(c.uuid) ? confirmItemContent(c.uuid) : editItemContent(c.uuid)">
+            <div [ngClass]="{invisible : isInEditMode(c.uuid)}">
+                {{c.desc}}
+            </div>
+            <div [ngClass]="{invisible : !isInEditMode(c.uuid)}">
+                <ion-textarea placeholder=c.desc></ion-textarea>
+            </div>
           </ion-card-content>
         </ion-card>
       </ion-item>
-        <ion-item-options side="end">
-          <ion-item-option (click)="deleteCard(c.uuid)">
-            Supprimer
-            <ion-icon class="trashicon" name="trash"></ion-icon>
-          </ion-item-option>
-        </ion-item-options>
-      </ion-item-sliding>
-    </div>
+      <ion-item-options side="end">
+        <ion-item-option (click)="deleteItem(c.uuid)">
+          Supprimer
+          <ion-icon class="trashicon" name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </div>
 
 </ion-content>

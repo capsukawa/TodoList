@@ -5,3 +5,17 @@ ion-card{
 .trashicon {
     font-size: 40px;
 }
+
+.mycheckbox {
+    position: absolute;
+    top: 0.1rem;
+    right: 2rem;
+}
+
+.invisible {
+    display: none;
+}
+
+.content {
+    min-height: 3rem;
+}
