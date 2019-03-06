@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import {Observable, of} from 'rxjs';
 import 'rxjs/Rx';
+import uuid from 'uuid/v4';
 
 
 export interface TodoList {
@@ -74,12 +75,12 @@ export class TodoServiceProvider {
     return of(this.data);
   }
 
-  public getListName(uuid: String): Observable<String> {
-    return of(this.data.find(d => d.uuid === uuid).name);
+  public getListName(id: String): Observable<String> {
+    return of(this.data.find(d => d.uuid === id).name);
   }
 
-  public getTodos(uuid: String): Observable<TodoItem[]> {
-    return of(this.data.find(d => d.uuid === uuid).items);
+  public getTodos(id: String): Observable<TodoItem[]> {
+    return of(this.data.find(d => d.uuid === id).items);
   }
 
   public editTodo(listUuid: String, editedItem: TodoItem) {
@@ -88,11 +89,19 @@ export class TodoServiceProvider {
     items[index] = editedItem;
   }
 
-  public deleteTodo(listUuid: String, uuid: String) {
+  public deleteTodo(listUuid: String, _uuid: String) {
     const items = this.data.find(d => d.uuid === listUuid).items;
     const index = items.findIndex(value => value.uuid === uuid);
     if (index !== -1) {
       items.splice(index, 1);
     }
+  }
+
+  public newTodoList(name: string) {
+    this.data.push({
+      uuid : uuid(),
+      name : name,
+      items : []
+    });
   }
 }

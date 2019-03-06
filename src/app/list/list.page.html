@@ -23,10 +23,10 @@
 
           <ion-card-content class="content" (click)="isInEditMode(c.uuid) ? confirmItemContent(c.uuid) : editItemContent(c.uuid)">
             <div [ngClass]="{invisible : isInEditMode(c.uuid)}">
-                {{c.desc}}
+              {{c.desc}}
             </div>
             <div [ngClass]="{invisible : !isInEditMode(c.uuid)}">
-                <ion-textarea placeholder=c.desc></ion-textarea>
+              <ion-textarea placeholder=c.desc></ion-textarea>
             </div>
           </ion-card-content>
         </ion-card>
