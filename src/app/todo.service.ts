@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import 'rxjs/Rx';
+import uuid from 'uuid/v4';
 
 
 export interface TodoList {
@@ -11,7 +13,7 @@ export interface TodoList {
 }
 
 export interface TodoItem {
-  uuid?: string;
+  uuid: string;
   name: string;
   desc?: string;
   complete: boolean;
@@ -89,28 +91,36 @@ export class TodoServiceProvider {
     return this.todos$;
   }
 
-  public getListName(uuid: String): Observable<String> {
-    return of(this.data.find(d => d.uuid === uuid).name);
+  public getListName(id: String): Observable<String> {
+    return of(this.data.find(d => d.uuid === id).name);
   }
 
-  public getTodos(uuid: string): Observable<TodoItem[]> {
+  public getTodos(id: string): Observable<TodoItem[]> {
     // return of(this.data.find(d => d.uuid === uuid).items);
-    return this.todosCollection.doc<TodoItem[]>(uuid).valueChanges();
+    return this.todosCollection.doc<TodoItem[]>(id).valueChanges();
   }
 
-  public editTodo(listUuid: string, editedItem: TodoItem) {
+  public editTodo(id: string, editedItem: TodoItem) {
     // const items = this.data.find(d => d.uuid === listUuid).items;
     // const index = items.findIndex(value => value.uuid === editedItem.uuid);
     // items[index] = editedItem;
-    this.todosCollection.doc(listUuid).update(editedItem);
+    this.todosCollection.doc(id).update(editedItem);
   }
 
-  public deleteTodo(listUuid: string, uuid: String) {
+  public deleteTodo(id: string) {
     // const items = this.data.find(d => d.uuid === listUuid).items;
     // const index = items.findIndex(value => value.uuid === uuid);
     // if (index !== -1) {
     //   items.splice(index, 1);
     // }
-    this.todosCollection.doc(listUuid).delete();
+    this.todosCollection.doc(id).delete();
+  }
+
+  public newTodoList(name: string) {
+    this.data.push({
+      uuid : uuid(),
+      name : name,
+      items : []
+    });
   }
 }
