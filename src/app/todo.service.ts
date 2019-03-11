@@ -87,40 +87,58 @@ export class TodoServiceProvider {
   }
 
   public getList(): Observable<TodoList[]> {
+    ///// VERSION LOCALE
     // return of(this.data);
+    ///// VERSION FIRESTORE
     return this.todos$;
   }
 
-  public getListName(id: String): Observable<String> {
+  public getListName(id: string): Observable<String> {
+    ///// VERSION LOCALE
     return of(this.data.find(d => d.uuid === id).name);
+    ///// VERSION FIRESTORE
   }
 
   public getTodos(id: string): Observable<TodoItem[]> {
+    ///// VERSION LOCALE
     // return of(this.data.find(d => d.uuid === uuid).items);
+    ///// VERSION FIRESTORE
     return this.todosCollection.doc<TodoItem[]>(id).valueChanges();
   }
 
   public editTodo(id: string, editedItem: TodoItem) {
+    ///// VERSION LOCALE
     // const items = this.data.find(d => d.uuid === listUuid).items;
     // const index = items.findIndex(value => value.uuid === editedItem.uuid);
     // items[index] = editedItem;
+    ///// VERSION FIRESTORE
     this.todosCollection.doc(id).update(editedItem);
   }
 
   public deleteTodo(id: string) {
+    ///// VERSION LOCALE
     // const items = this.data.find(d => d.uuid === listUuid).items;
     // const index = items.findIndex(value => value.uuid === uuid);
     // if (index !== -1) {
     //   items.splice(index, 1);
     // }
+    ///// VERSION FIRESTORE
     this.todosCollection.doc(id).delete();
   }
 
   public newTodoList(name: string) {
-    this.data.push({
-      uuid : uuid(),
-      name : name,
-      items : []
+    ///// VERSION LOCALE
+    // this.data.push({
+    //   uuid : uuid(),
+    //   name : name,
+    //   items : []
+    // });
+    ///// VERSION FIRESTORE
+    const id: string = uuid();
+    this.todosCollection.doc(id).set({
+      uuid: id,
+      name: name,
+      items: []
     });
   }
 }

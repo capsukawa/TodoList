@@ -32,14 +32,14 @@ export class Tab2Page implements OnInit {
       ],
       buttons: [
         {
-          text: 'Cancel',
+          text: 'Annuler',
           role: 'cancel',
           handler: data => {
             console.log('You Clicked on Cancel');
           }
         },
         {
-          text: 'Login',
+          text: 'Créer',
           handler: data => { this.todoservice.newTodoList(data.Nom);
           }
         }
