@@ -50,13 +50,17 @@ export class Tab2Page implements OnInit {
 
   openList(uuid) {
     console.log(uuid);
+    let bla: TodoList;
+    this.todoservice.getList(uuid).subscribe(list => bla = list);
+    console.log(bla);
     this.navCtrl.navigateForward(`list/${uuid}`);
   }
 
-  getNumberOfElements(uuid) {
-    let n: number;
-    this.todoservice.getTodos(uuid).subscribe(list => n = list.length);
-    return n;
+  getNumberOfElements(uuid: string) {
+    // let n: number;
+    // this.todoservice.getTodos(uuid).subscribe(list => n = list.length);
+    // return n;
+    return 8;
   }
 
 }

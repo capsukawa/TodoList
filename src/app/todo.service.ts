@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, find } from 'rxjs/operators';
 import 'rxjs/Rx';
 import uuid from 'uuid/v4';
 
@@ -24,6 +24,7 @@ export interface TodoItem {
 export class TodoServiceProvider {
   private todosCollection: AngularFirestoreCollection<TodoList>;
   private todos$: Observable<TodoList[]>;
+  private todos: TodoList[];
   data: TodoList[] = [
     {
       uuid: 'a351e558-29ce-4689-943c-c3e97be0df8b',
@@ -74,7 +75,6 @@ export class TodoServiceProvider {
     console.log('Bonjour TodoService');
 
     this.todosCollection = db.collection<TodoList>('todos');
-    // this.todos$.subscribe(todos => this.todos = todos);
     this.todos$ = this.todosCollection.snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
@@ -84,20 +84,22 @@ export class TodoServiceProvider {
         });
       })
     );
+    this.todos$.subscribe(todos => this.todos = todos);
   }
 
   public getCollection(): Observable<TodoList[]> {
     ///// VERSION LOCALE
     // return of(this.data);
     ///// VERSION FIRESTORE
-    return this.todosCollection.valueChanges();
+    return this.todos$;
   }
 
   public getList(id: string): Observable<TodoList> {
     ///// VERSION LOCALE
     // return of(this.data.find(d => d.uuid === id).name);
     ///// VERSION FIRESTORE
-    return this.todosCollection.doc<TodoList>(id).valueChanges();
+    // return this.todosCollection.doc<TodoList>(id).valueChanges();
+    return of(this.todos.find(item => item.uuid === id));
   }
 
   public getTodos(id: string): Observable<TodoItem[]> {
