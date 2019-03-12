@@ -27,8 +27,7 @@ export class ListPage implements OnInit {
     this.route.params.subscribe(params => {
       const id = params['id'];
       this.listUuid = id;
-      this.todoservice.getTodos(id).subscribe(items => this.items = items);
-      // this.todoservice.getListName(id).subscribe(listName => this.listName = listName);
+      this.todoservice.getList(id).subscribe(list => {this.items = list.items; this.listName = list.name; });
       this.listName = 'ListName(temp)';
     });
   }

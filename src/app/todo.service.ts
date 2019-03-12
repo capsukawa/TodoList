@@ -86,17 +86,18 @@ export class TodoServiceProvider {
     );
   }
 
-  public getList(): Observable<TodoList[]> {
+  public getCollection(): Observable<TodoList[]> {
     ///// VERSION LOCALE
     // return of(this.data);
     ///// VERSION FIRESTORE
-    return this.todos$;
+    return this.todosCollection.valueChanges();
   }
 
-  public getListName(id: string): Observable<String> {
+  public getList(id: string): Observable<TodoList> {
     ///// VERSION LOCALE
-    return of(this.data.find(d => d.uuid === id).name);
+    //return of(this.data.find(d => d.uuid === id).name);
     ///// VERSION FIRESTORE
+    return this.todosCollection.doc<TodoList>(id).valueChanges();
   }
 
   public getTodos(id: string): Observable<TodoItem[]> {

@@ -17,7 +17,7 @@ export class Tab2Page implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.todoservice.getList().subscribe(lists => this.lists = lists);
+    this.todoservice.getCollection().subscribe(lists => this.lists = lists);
   }
 
   async newListPresentAlert() {
