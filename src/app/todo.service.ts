@@ -95,7 +95,7 @@ export class TodoServiceProvider {
 
   public getList(id: string): Observable<TodoList> {
     ///// VERSION LOCALE
-    //return of(this.data.find(d => d.uuid === id).name);
+    // return of(this.data.find(d => d.uuid === id).name);
     ///// VERSION FIRESTORE
     return this.todosCollection.doc<TodoList>(id).valueChanges();
   }
