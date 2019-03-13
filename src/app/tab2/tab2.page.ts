@@ -17,7 +17,7 @@ export class Tab2Page implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.todoservice.getCollection().subscribe(lists => this.lists = lists);
+    this.todoservice.getTodoLists().subscribe(lists => this.lists = lists);
   }
 
   async newListPresentAlert() {
@@ -33,10 +33,7 @@ export class Tab2Page implements OnInit {
       buttons: [
         {
           text: 'Annuler',
-          role: 'cancel',
-          handler: data => {
-            console.log('You Clicked on Cancel');
-          }
+          role: 'cancel'
         },
         {
           text: 'Créer',
@@ -49,18 +46,15 @@ export class Tab2Page implements OnInit {
   }
 
   openList(uuid) {
-    console.log(uuid);
-    let bla: TodoList;
-    this.todoservice.getList(uuid).subscribe(list => bla = list);
-    console.log(bla);
     this.navCtrl.navigateForward(`list/${uuid}`);
   }
 
   getNumberOfElements(uuid: string) {
-    // let n: number;
-    // this.todoservice.getTodos(uuid).subscribe(list => n = list.length);
-    // return n;
-    return 8;
+    return this.lists.find(list => list.uuid === uuid).items.length;
+  }
+
+  deleteList(id: string) {
+    this.todoservice.deleteTodoList(id);
   }
 
 }
