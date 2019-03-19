@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "300673643373-nvb1dbder3e41vcvo9pgo5pmobt7jk2i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.devmobile.todolist",
+            "certificate_hash": "0fc04381d27b85f9c8c52557f80b7f4d483d20ee"
+          }
+        },
+        {
           "client_id": "300673643373-0eri1s1emv5gsqu99fs7dqdbqpgl1tvh.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "300673643373-0eri1s1emv5gsqu99fs7dqdbqpgl1tvh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
