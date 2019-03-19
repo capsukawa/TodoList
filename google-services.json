@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "300673643373",
+    "firebase_url": "https://devmobile-todolist.firebaseio.com",
+    "project_id": "devmobile-todolist",
+    "storage_bucket": "devmobile-todolist.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:300673643373:android:84f6337e633ef7fd",
+        "android_client_info": {
+          "package_name": "com.devmobile.todolist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "300673643373-0eri1s1emv5gsqu99fs7dqdbqpgl1tvh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBusEgm13pEiOA5LQScE8t_RMITiNgaKCI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
