@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+import { Injectable, OnInit } from '@angular/core';
+import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from 'angularfire2/firestore';
 import { Observable, of } from 'rxjs';
-import { map, find } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import 'rxjs/Rx';
 import uuid from 'uuid/v4';
 
@@ -23,8 +23,8 @@ export interface TodoItem {
 @Injectable()
 export class TodoServiceProvider {
   private todosCollection: AngularFirestoreCollection<TodoList>;
-  private todos$: Observable<TodoList[]>;
-  private todos: TodoList[];
+  private todosCollection$: Observable<TodoList[]>;
+  private todos: TodoList[] = [];
   data: TodoList[] = [
     {
       uuid: 'a351e558-29ce-4689-943c-c3e97be0df8b',
@@ -71,11 +71,9 @@ export class TodoServiceProvider {
     }
   ];
 
-  constructor(db: AngularFirestore) {
-    console.log('Bonjour TodoService');
-
+  constructor(private db: AngularFirestore) {
     this.todosCollection = db.collection<TodoList>('todos');
-    this.todos$ = this.todosCollection.snapshotChanges().pipe(
+    this.todosCollection$ = this.todosCollection.snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
           const data = a.payload.doc.data();
@@ -84,64 +82,68 @@ export class TodoServiceProvider {
         });
       })
     );
-    this.todos$.subscribe(todos => this.todos = todos);
+    this.todosCollection$.subscribe(todos => this.todos = todos);
   }
 
-  public getCollection(): Observable<TodoList[]> {
-    ///// VERSION LOCALE
-    // return of(this.data);
-    ///// VERSION FIRESTORE
-    return this.todos$;
+  public getTodoLists(): Observable<TodoList[]> {
+    return this.todosCollection$;
   }
 
-  public getList(id: string): Observable<TodoList> {
-    ///// VERSION LOCALE
-    // return of(this.data.find(d => d.uuid === id).name);
-    ///// VERSION FIRESTORE
-    // return this.todosCollection.doc<TodoList>(id).valueChanges();
-    return of(this.todos.find(item => item.uuid === id));
+  public getTodoListsValue(): TodoList[] {
+    return this.todos;
   }
 
-  public getTodos(id: string): Observable<TodoItem[]> {
-    ///// VERSION LOCALE
-    // return of(this.data.find(d => d.uuid === uuid).items);
-    ///// VERSION FIRESTORE
-    return this.todosCollection.doc<TodoItem[]>(id).valueChanges();
+  public getTodoList(listId: string): Observable<TodoList> {
+    // return this.db.collection('todos', ref => ref.where('uuid', '==', listId)).snapshotChanges()[0].pipe(
+    //   map(actions => {
+    //     return actions.map(a => {
+    //       const data = a.payload.doc.data();
+    //       const id = a.payload.doc.id;
+    //       return { id, ...data };
+    //     });
+    //   })
+    // );
+    // return of(this.todos.find(list => list.uuid === uuid));
   }
 
-  public editTodo(id: string, editedItem: TodoItem) {
-    ///// VERSION LOCALE
-    // const items = this.data.find(d => d.uuid === listUuid).items;
-    // const index = items.findIndex(value => value.uuid === editedItem.uuid);
-    // items[index] = editedItem;
-    ///// VERSION FIRESTORE
-    this.todosCollection.doc(id).update(editedItem);
+  public deleteTodoList(id: string) {
+    this.db.collection('todos', ref => ref.where('uuid', '==', id))
+    .snapshotChanges().take(1).subscribe(docs => docs.forEach(v => v.payload.doc.ref.delete()));
   }
 
-  public deleteTodo(id: string) {
-    ///// VERSION LOCALE
-    // const items = this.data.find(d => d.uuid === listUuid).items;
-    // const index = items.findIndex(value => value.uuid === uuid);
-    // if (index !== -1) {
-    //   items.splice(index, 1);
-    // }
-    ///// VERSION FIRESTORE
-    this.todosCollection.doc(id).delete();
+  public updateTodoList(id: string, list: TodoList) {
+    this.db.collection('todos', ref => ref.where('uuid', '==', id))
+    .snapshotChanges().take(1).subscribe(docs => docs.forEach(v => v.payload.doc.ref.update(list)));
   }
 
   public newTodoList(name: string) {
-    ///// VERSION LOCALE
-    // this.data.push({
-    //   uuid : uuid(),
-    //   name : name,
-    //   items : []
-    // });
-    ///// VERSION FIRESTORE
     const id: string = uuid();
     this.todosCollection.doc(id).set({
       uuid: id,
       name: name,
-      items: []
+      items: [{
+        uuid: '7dc94eb4-d4e9-441b-b06b-0ca29738c8d2',
+        name: 'Item 1-1',
+        complete: false,
+        desc: 'je suis sans famille et je m appelle remi et je me balade dans la vie'
+      },
+      {
+        uuid: '20c09bdd-1cf8-43b0-9111-977fc4d343bc',
+        name: 'Item 1-2',
+        complete: false
+      },
+      {
+        uuid: 'bef88351-f4f1-4b6a-965d-bb1a4fa3b444',
+        name: 'Item 1-3',
+        complete: true
+      }]
     });
   }
+
+  // public newItem(listName: string, name: string, desc?: string) {
+  //   const id: string = uuid();
+  //   this.db.collection('todos', ref => ref.where('uuid', '==', id))
+  //   .snapshotChanges().subscribe(docs => docs.forEach(v => v.doc(id)));
+  // }
+
 }
