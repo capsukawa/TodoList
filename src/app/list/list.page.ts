@@ -14,12 +14,6 @@ export class ListPage implements OnInit {
   listUuid: string;
   isInEditModeMap: Map<string, boolean>;
 
-  @Output()
-  deleteListEvent = new EventEmitter<string>();
-
-  @Output()
-  deleteItemEvent = new EventEmitter<string>();
-
   constructor(private route: ActivatedRoute, private todoservice: TodoServiceProvider) {}
 
   ngOnInit() {
@@ -27,18 +21,16 @@ export class ListPage implements OnInit {
     this.route.params.subscribe(params => {
       const id = params['id'];
       this.listUuid = id;
-      this.todoservice.getTodoList(id).subscribe(list => {this.items = list.items; this.listName = list.name; console.log('prout'); });
     });
-  }
-
-  deleteList() {
-    console.log('deleting list of id' + this.listUuid);
-    // TODO Delete in base
+    this.todoservice.getTodoList(this.listUuid)
+      .subscribe(list => {
+        this.items = list.items;
+        this.listName = list.name;
+      });
   }
 
   deleteItem(uuid: string) {
-    console.log('deleting item of id' + uuid + 'of list' + this.listUuid);
-    // TODO Delete in base
+    this.todoservice.deleteTodoItem(this.listUuid, uuid);
   }
 
   editItemContent(uuid: string) {
@@ -47,13 +39,13 @@ export class ListPage implements OnInit {
     }
   }
 
-  confirmItemContent(uuid: string) {
-    // TODO Base
-    this.isInEditModeMap.delete(uuid);
+  confirmItemContent(item: TodoItem) {
+    // this.todoservice.updateTodoItem(this.listUuid, item.uuid, item);
+    console.log('edit piaf');
+    this.isInEditModeMap.delete(item.uuid);
   }
 
   isInEditMode(uuid: string): boolean {
-    console.log(this.isInEditModeMap.has(uuid));
     return this.isInEditModeMap.has(uuid);
   }
 }
