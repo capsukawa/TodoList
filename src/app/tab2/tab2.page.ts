@@ -4,6 +4,8 @@ import { NavController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 
+import { GoogleLoginService } from '../google-login.service';
+
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
@@ -13,12 +15,15 @@ import { AngularFireAuth } from '@angular/fire/auth';
 export class Tab2Page implements OnInit {
   lists: TodoList[];
   user: firebase.User;
+  userMail: string;
 
   constructor(private todoservice: TodoServiceProvider, private navCtrl: NavController,
-              private alertController: AlertController, private afAuth: AngularFireAuth) {}
+              private alertController: AlertController, private afAuth: AngularFireAuth,
+              private gservice: GoogleLoginService) {}
 
   ngOnInit() {
     this.afAuth.user.subscribe(user => this.user = user);
+    this.userMail = this.gservice.userMail;
     this.todoservice.getTodoLists().subscribe(lists => this.lists = lists);
   }
 
