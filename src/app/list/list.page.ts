@@ -1,6 +1,8 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TodoServiceProvider, TodoItem, TodoList } from '../todo.service';
+import { AlertController, NavController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-list',
@@ -8,28 +10,62 @@ import { TodoServiceProvider, TodoItem, TodoList } from '../todo.service';
   styleUrls: ['./list.page.scss'],
 })
 
-export class ListPage implements OnInit {
+
+
+export class ListPage implements OnInit, OnDestroy {
+
   items: TodoItem[];
   listName: String;
   listUuid: string;
   isInEditModeMap: Map<string, boolean>;
+  routeSub: Subscription;
+  listSub: Subscription;
 
-  constructor(private route: ActivatedRoute, private todoservice: TodoServiceProvider) {}
+  constructor(private route: ActivatedRoute, private todoservice: TodoServiceProvider,
+     private alertController: AlertController, private navCtrl: NavController) {}
+
+  @ViewChild('dynamicList') dynamicList;
 
   ngOnInit() {
     this.isInEditModeMap = new Map();
-    this.route.params.subscribe(params => {
+    this.routeSub = this.route.params.subscribe(params => {
       const id = params['id'];
       this.listUuid = id;
     });
-    this.todoservice.getTodoList(this.listUuid)
+    this.listSub = this.todoservice.getTodoList(this.listUuid)
       .subscribe(list => {
         this.items = list.items;
         this.listName = list.name;
       });
   }
 
+  async deleteListPresentAlert() {
+
+    const alert = await this.alertController.create({
+      header : 'Supprimer la liste ?',
+      message : 'Attention, tous les éléments seront supprimés',
+      buttons: [
+        {
+          text: 'Annuler',
+          role: 'cancel',
+          cssClass: 'color : red'
+        },
+        {
+          text: 'Supprimer',
+          cssClass: 'dangerbtn',
+          handler: data => {
+            this.ngOnDestroy();
+            this.todoservice.deleteTodoList(this.listUuid);
+            this.navCtrl.goBack();
+          }
+        }
+      ]
+    });
+    return await alert.present();
+  }
+
   deleteItem(uuid: string) {
+    this.dynamicList.closeSlidingItems();
     this.todoservice.deleteTodoItem(this.listUuid, uuid);
   }
 
@@ -42,10 +78,15 @@ export class ListPage implements OnInit {
   confirmItemContent(item: TodoItem) {
     // this.todoservice.updateTodoItem(this.listUuid, item.uuid, item);
     console.log('edit piaf');
-    this.isInEditModeMap.delete(item.uuid);
+    // this.isInEditModeMap.delete(item.uuid);
   }
 
   isInEditMode(uuid: string): boolean {
     return this.isInEditModeMap.has(uuid);
+  }
+
+  ngOnDestroy(): void {
+    this.listSub.unsubscribe();
+    this.routeSub.unsubscribe();
   }
 }

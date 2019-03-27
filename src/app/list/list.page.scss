@@ -2,6 +2,17 @@ ion-card{
     width: 100%;
 }
 
+.headertrashicon {
+    font-size: 2em;
+    position: absolute;
+    right: 15px;
+    top: 13px;
+
+    &:active {
+        opacity: 0.5;
+    }
+}
+
 .trashicon {
     font-size: 40px;
 }
@@ -18,4 +29,10 @@ ion-card{
 
 .content {
     min-height: 3rem;
+}
+
+.dangerbtn {
+    color: white;
+    background-color: rgb(256,50,50);
+    border-radius: 5px;
 }

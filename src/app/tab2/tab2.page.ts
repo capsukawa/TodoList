@@ -44,6 +44,7 @@ export class Tab2Page implements OnInit {
         },
         {
           text: 'Créer',
+          cssClass: 'successbtn',
           handler: data => { this.todoservice.newTodoList(data.Nom);
           }
         }
