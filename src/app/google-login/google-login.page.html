@@ -1,9 +1,11 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>google-login</ion-title>
+    <ion-title>Se connecter</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-
+  <button ion-button *ngIf="!user.uid" (click)="googleLogin()">
+    Login with Google
+  </button>
 </ion-content>
