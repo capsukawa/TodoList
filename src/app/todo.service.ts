@@ -6,6 +6,8 @@ import 'rxjs/Rx';
 import uuid from 'uuid/v4';
 import { AlertController } from '@ionic/angular';
 
+import { GoogleLoginService } from './google-login.service';
+
 
 export interface TodoList {
   uuid: string;
@@ -72,8 +74,9 @@ export class TodoServiceProvider {
     }
   ];
 
-  constructor(private db: AngularFirestore, private alertController: AlertController) {
-    this.todosCollection = db.collection<TodoList>('todos');
+  constructor(private db: AngularFirestore, private alertController: AlertController,
+              private gservice: GoogleLoginService) {
+    this.todosCollection = db.collection<TodoList>(this.gservice.userMail);
     this.todosCollection$ = this.todosCollection.snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
