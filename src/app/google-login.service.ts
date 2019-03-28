@@ -39,7 +39,7 @@ export class GoogleLoginService {
   async nativeGoogleLogin(): Promise<firebase.User> {
     try {
       const gplusUser = await this.gplus.login({
-        'webClientId': '719085143917-kfr14rros89c5gc85o89ikimdrghd4hk.apps.googleusercontent.com',
+        'webClientId': '300673643373-0eri1s1emv5gsqu99fs7dqdbqpgl1tvh.apps.googleusercontent.com',
         'offline': true,
         'scopes': 'profile email'
       });
