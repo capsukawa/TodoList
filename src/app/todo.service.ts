@@ -1,3 +1,4 @@
+import { TodoItem } from './todo.service';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Observable } from 'rxjs';
@@ -114,12 +115,14 @@ export class TodoServiceProvider {
   }
 
   public deleteTodoList(id: string) {
-    this.db.collection('todos', ref => ref.where('uuid', '==', id))
-    .snapshotChanges().take(1).subscribe(docs => docs.forEach(v => v.payload.doc.ref.delete()));
+    this.db.collection(this.gservice.userMail, ref => ref.where('uuid', '==', id))
+    .snapshotChanges().take(1).subscribe(docs =>
+      docs.forEach(v => v.payload.doc.ref.delete()
+    ));
   }
 
   public updateTodoList(id: string, list: TodoList) {
-    this.db.collection('todos', ref => ref.where('uuid', '==', id))
+    this.db.collection(this.gservice.userMail, ref => ref.where('uuid', '==', id))
     .snapshotChanges().take(1).subscribe(docs => docs.forEach(v => v.payload.doc.ref.update(list)));
   }
 
@@ -154,28 +157,39 @@ export class TodoServiceProvider {
     });
   }
 
-  // public newItem(listName: string, name: string, desc?: string) {
-  //   const id: string = uuid();
-  //   this.db.collection('todos', ref => ref.where('uuid', '==', id))
-  //   .snapshotChanges().subscribe(docs => docs.forEach(v => v.doc(id)));
-  // }
+  public newItem(listId: string, name: string, desc: string) {
+    const id: string = uuid();
+    const newItem: TodoItem = {
+      uuid: id,
+      name: name,
+      desc: desc,
+      complete: false
+    };
+    this.updateTodoItem(listId, newItem);
+  }
 
   public deleteTodoItem(listId: string, itemId: string) {
     const newList: TodoList = this.todos.find(list => list.uuid === listId);
     const newItems: TodoItem[] = newList.items.filter(item => item.uuid !== itemId);
     newList.items = newItems;
-    this.db.collection('todos', ref => ref.where('uuid', '==', listId))
+    this.db.collection(this.gservice.userMail, ref => ref.where('uuid', '==', listId))
     .snapshotChanges().take(1).subscribe(docs => docs.forEach(v => v.payload.doc.ref.update(newList)));
   }
-  // TODO MARCHEPO
-  // public updateTodoItem(listId: string, itemId: string, newItem: TodoItem) {
-  //   const newList: TodoList = this.todos.find(list => list.uuid === listId);
-  //   const newItems: TodoItem[] = newList.items.filter(item => item.uuid !== itemId);
-  //   newItems.push(newItem);
-  //   newList.items = newItems;
-  //   this.db.collection('todos', ref => ref.where('uuid', '==', listId))
-  //   .snapshotChanges().take(1).subscribe(docs => docs.forEach(v => v.payload.doc.ref.update(newList)));
-  // }
+
+  public updateTodoItem(listId: string, newItem: TodoItem) {
+    const newList: TodoList = this.todos.find(list => list.uuid === listId);
+    let newItemIndex = newList.items.length;
+    for (let i = 0; i < newList.items.length ; i++) {
+      if (newList.items[i].uuid === newItem.uuid){
+        newItemIndex = i;
+      }
+    }
+    const newItems: TodoItem[] = newList.items.filter(item => item.uuid !== newItem.uuid);
+    newItems.splice(newItemIndex, 0, newItem);
+    newList.items = newItems;
+
+    this.updateTodoList(listId, newList);
+  }
 
   async todoServiceErrorPresentAlert(errorMessage: string) {
 

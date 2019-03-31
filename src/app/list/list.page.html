@@ -1,3 +1,9 @@
+<ion-fab vertical="bottom" horizontal="end">
+  <ion-fab-button bottom right size = "small" (click)="newItemPresentAlert()">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -10,7 +16,7 @@
 
 <ion-content padding>
   <ion-list #dynamicList>
-    <ion-item-sliding *ngFor='let c of items; let i = index'>
+    <ion-item-sliding *ngFor='let c of items; let i = index' [disabled]="isInEditMode">
       <ion-item>
         <ion-card>
           <ion-card-header>
@@ -18,16 +24,20 @@
               {{c.name}}
             </ion-card-title>
             <ng-container>
-              <ion-checkbox class="mycheckbox" [(ngModel)]="c.complete"></ion-checkbox>
+              <ion-checkbox class="mycheckbox" [(ngModel)]="c.complete" (ionChange)="triggerChange(c)"></ion-checkbox>
             </ng-container>
           </ion-card-header>
 
-          <ion-card-content class="content" (click)="isInEditMode(c.uuid) ? confirmItemContent(c.uuid) : editItemContent(c.uuid)">
+          <ion-card-content class="content" (press)="editItemContent(c.uuid)">
             <div [ngClass]="{invisible : isInEditMode(c.uuid)}">
               {{c.desc}}
             </div>
             <div [ngClass]="{invisible : !isInEditMode(c.uuid)}">
-              <ion-textarea placeholder=c.desc></ion-textarea>
+              <ion-textarea placeholder=c.desc [(ngModel)]="c.desc">
+              </ion-textarea>
+              <button (click)="confirmItemContent(c)" class="successbtn">
+                  <ion-icon name="checkmark"></ion-icon>
+              </button>
             </div>
           </ion-card-content>
         </ion-card>

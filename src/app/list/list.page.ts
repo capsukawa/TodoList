@@ -64,6 +64,38 @@ export class ListPage implements OnInit, OnDestroy {
     return await alert.present();
   }
 
+  async newItemPresentAlert() {
+
+    const alert = await this.alertController.create({
+      header : 'Nouvelle tâche',
+      inputs: [
+        {
+          name: 'Nom',
+          placeholder: 'Ma super tâche'
+        },
+        {
+          name: 'Description',
+          placeholder: 'Ma super description',
+          type: 'text'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Annuler',
+          role: 'cancel'
+        },
+        {
+          text: 'Créer',
+          cssClass: 'successbtn',
+          handler: data => {
+            this.todoservice.newItem(this.listUuid, data.Nom, data.Description);
+          }
+        }
+      ]
+    });
+    return await alert.present();
+  }
+
   deleteItem(uuid: string) {
     this.dynamicList.closeSlidingItems();
     this.todoservice.deleteTodoItem(this.listUuid, uuid);
@@ -76,13 +108,19 @@ export class ListPage implements OnInit, OnDestroy {
   }
 
   confirmItemContent(item: TodoItem) {
-    // this.todoservice.updateTodoItem(this.listUuid, item.uuid, item);
+    this.triggerChange(item);
     console.log('edit piaf');
-    // this.isInEditModeMap.delete(item.uuid);
+    this.isInEditModeMap.delete(item.uuid);
+    if (this.isInEditModeMap.size === 0) {
+    }
   }
 
   isInEditMode(uuid: string): boolean {
     return this.isInEditModeMap.has(uuid);
+  }
+
+  triggerChange(item: TodoItem) {
+    this.todoservice.updateTodoItem(this.listUuid, item);
   }
 
   ngOnDestroy(): void {
