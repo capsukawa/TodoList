@@ -134,22 +134,7 @@ export class TodoServiceProvider {
         doc.set({
           uuid: id,
           name: name,
-          items: [{
-            uuid: '7dc94eb4-d4e9-441b-b06b-0ca29738c8d2',
-            name: 'Item 1-1',
-            complete: false,
-            desc: 'je suis sans famille et je m appelle remi et je me balade dans la vie'
-          },
-          {
-            uuid: '20c09bdd-1cf8-43b0-9111-977fc4d343bc',
-            name: 'Item 1-2',
-            complete: false
-          },
-          {
-            uuid: 'bef88351-f4f1-4b6a-965d-bb1a4fa3b444',
-            name: 'Item 1-3',
-            complete: true
-          }]
+          items: []
         });
     } else {
       this.todoServiceErrorPresentAlert('Impossible de créer deux listes portant le même nom !');
@@ -180,7 +165,7 @@ export class TodoServiceProvider {
     const newList: TodoList = this.todos.find(list => list.uuid === listId);
     let newItemIndex = newList.items.length;
     for (let i = 0; i < newList.items.length ; i++) {
-      if (newList.items[i].uuid === newItem.uuid){
+      if (newList.items[i].uuid === newItem.uuid) {
         newItemIndex = i;
       }
     }
