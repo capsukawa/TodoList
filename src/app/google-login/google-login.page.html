@@ -5,11 +5,13 @@
 </ion-header>
 
 <ion-content padding>
-  <button ion-button *ngIf="!user.uid" (click)="googleLogin()">
-    Login with Google
-  </button>
-  <p></p>
-  <button ion-button *ngIf="!user.uid" (click)="disconnectedMode()">
-    Mode déconnecté
-  </button>
+  <div class="container">
+    <button ion-button *ngIf="!user.uid" (click)="googleLogin()" class="homebtn">
+        Login with Google
+    </button>
+    <br/>
+    <button ion-button *ngIf="!user.uid" (click)="disconnectedMode()" class="homebtn">
+      Mode déconnecté
+    </button>
+  </div>
 </ion-content>

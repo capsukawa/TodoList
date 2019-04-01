@@ -20,6 +20,7 @@ export class ListPage implements OnInit, OnDestroy {
   isInEditModeMap: Map<string, boolean>;
   routeSub: Subscription;
   listSub: Subscription;
+  disableSlide = false;
 
   constructor(private route: ActivatedRoute, private todoservice: TodoServiceProvider,
      private alertController: AlertController, private navCtrl: NavController) {}
@@ -75,8 +76,7 @@ export class ListPage implements OnInit, OnDestroy {
         },
         {
           name: 'Description',
-          placeholder: 'Ma super description',
-          type: 'text'
+          placeholder: 'Ma super description'
         }
       ],
       buttons: [
@@ -104,14 +104,15 @@ export class ListPage implements OnInit, OnDestroy {
   editItemContent(uuid: string) {
     if (!this.isInEditModeMap.has(uuid)) {
       this.isInEditModeMap.set(uuid, true);
+      this.disableSlide = true;
     }
   }
 
   confirmItemContent(item: TodoItem) {
     this.triggerChange(item);
-    console.log('edit piaf');
     this.isInEditModeMap.delete(item.uuid);
     if (this.isInEditModeMap.size === 0) {
+      this.disableSlide = false;
     }
   }
 

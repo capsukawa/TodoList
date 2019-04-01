@@ -16,7 +16,7 @@
 
 <ion-content padding>
   <ion-list #dynamicList>
-    <ion-item-sliding *ngFor='let c of items; let i = index'>
+    <ion-item-sliding *ngFor='let c of items; let i = index' [disabled]='disableSlide'>
       <ion-item>
         <ion-card>
           <ion-card-header>
@@ -33,7 +33,7 @@
               {{c.desc}}
             </div>
             <div [ngClass]="{invisible : !isInEditMode(c.uuid)}">
-              <ion-textarea placeholder=c.desc [(ngModel)]="c.desc" style="margin-bottom: 26px;" rows=20>
+              <ion-textarea placeholder=c.desc [(ngModel)]="c.desc" style="margin-bottom: 26px;" rows=5>
               </ion-textarea>
               <button (click)="confirmItemContent(c)" class="successbtn todoeditbtn">
                   <ion-icon name="checkmark"></ion-icon>
