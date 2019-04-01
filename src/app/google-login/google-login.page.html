@@ -8,4 +8,8 @@
   <button ion-button *ngIf="!user.uid" (click)="googleLogin()">
     Login with Google
   </button>
+  <p></p>
+  <button ion-button *ngIf="!user.uid" (click)="disconnectedMode()">
+    Mode déconnecté
+  </button>
 </ion-content>

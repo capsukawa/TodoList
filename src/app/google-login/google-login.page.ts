@@ -28,4 +28,8 @@ export class GoogleLoginPage {
   googleLogin() {
     this.gservice.googleLogin();
   }
+
+  disconnectedMode() {
+    console.log('bloup');
+  }
 }
