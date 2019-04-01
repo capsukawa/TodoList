@@ -10,6 +10,7 @@ import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { Platform } from '@ionic/angular';
 
 import { GoogleLoginService } from '../google-login.service';
+import { DisconnectedService } from '../disconnected.service';
 
 @Component({
   selector: 'app-google-login',
@@ -21,7 +22,7 @@ export class GoogleLoginPage {
 
   constructor(private afAuth: AngularFireAuth, private gplus: GooglePlus,
               private platform: Platform, private navCtrl: NavController,
-              private gservice: GoogleLoginService) {
+              private gservice: GoogleLoginService, private dservice: DisconnectedService) {
     this.user = this.afAuth.user;
   }
 
@@ -30,6 +31,7 @@ export class GoogleLoginPage {
   }
 
   disconnectedMode() {
-    console.log('bloup');
+    this.dservice.activateDisconnectedMode();
+    this.navCtrl.navigateRoot('tabs');
   }
 }

@@ -27,8 +27,9 @@
     "@ionic-native/status-bar": "5.0.0-beta.21",
     "@ionic/angular": "4.0.0-rc.1",
     "@ionic/pro": "2.0.4",
+    "@ionic/storage": "^2.2.0",
     "angularfire2": "^5.1.1",
-    "cordova-android": "^7.1.4",
+    "cordova-android": "7.1.4",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-firebase": "^2.0.5",
     "cordova-plugin-googleplus": "7.0.0",
@@ -38,6 +39,7 @@
     "cordova-plugin-splashscreen": "^5.0.2",
     "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-whitelist": "^1.3.3",
+    "cordova-sqlite-storage": "3.2.0",
     "core-js": "^2.5.4",
     "firebase": "^5.8.3",
     "hammerjs": "^2.0.8",
@@ -91,7 +93,8 @@
       "cordova-plugin-googleplus": {
         "WEB_APPLICATION_CLIENT_ID": "300673643373-0eri1s1emv5gsqu99fs7dqdbqpgl1tvh.apps.googleusercontent.com",
         "PLAY_SERVICES_VERSION": "11.8.0"
-      }
+      },
+      "cordova-sqlite-storage": {}
     },
     "platforms": [
       "android"

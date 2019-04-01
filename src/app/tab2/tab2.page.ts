@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { TodoServiceProvider, TodoList } from '../todo.service';
 import { NavController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 
+import { TodoServiceProvider, TodoList } from '../todo.service';
 import { GoogleLoginService } from '../google-login.service';
+import { DisconnectedService } from '../disconnected.service';
 
 @Component({
   selector: 'app-tab2',
@@ -19,12 +20,14 @@ export class Tab2Page implements OnInit {
 
   constructor(private todoservice: TodoServiceProvider, private navCtrl: NavController,
               private alertController: AlertController, private afAuth: AngularFireAuth,
-              private gservice: GoogleLoginService) {}
+              private gservice: GoogleLoginService, private dservice: DisconnectedService) {}
 
   ngOnInit() {
-    this.afAuth.user.subscribe(user => this.user = user);
-    this.userMail = this.gservice.userMail;
-    this.todoservice.getTodoLists().subscribe(lists => this.lists = lists);
+    if (!this.dservice.isInDisconnectedMode) {
+      this.afAuth.user.subscribe(user => this.user = user);
+      this.userMail = this.gservice.userMail;
+      this.todoservice.getTodoLists().subscribe(lists => this.lists = lists);
+    } else { this.lists = this.dservice.getTodoLists(); }
   }
 
   async newListPresentAlert() {
@@ -45,7 +48,8 @@ export class Tab2Page implements OnInit {
         {
           text: 'Créer',
           cssClass: 'successbtn',
-          handler: data => { this.todoservice.newTodoList(data.Nom);
+          handler: data => {
+            this.dservice.isInDisconnectedMode ? this.dservice.newTodoList(data.Nom) : this.todoservice.newTodoList(data.Nom);
           }
         }
       ]
@@ -62,7 +66,7 @@ export class Tab2Page implements OnInit {
   }
 
   deleteList(id: string) {
-    this.todoservice.deleteTodoList(id);
+    this.dservice.isInDisconnectedMode ? this.dservice.deleteTodoList(id) : this.todoservice.deleteTodoList(id);
   }
 
 }
