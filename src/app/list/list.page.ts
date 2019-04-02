@@ -1,9 +1,10 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TodoServiceProvider, TodoItem, TodoList } from '../todo.service';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, NavController, Events } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
+import { DisconnectedService } from '../disconnected.service';
 
 @Component({
   selector: 'app-list',
@@ -25,7 +26,8 @@ export class ListPage implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute, private todoservice: TodoServiceProvider,
      private alertController: AlertController, private navCtrl: NavController,
-     private speechRecognition: SpeechRecognition) {}
+     private speechRecognition: SpeechRecognition, private dservice: DisconnectedService,
+     private events: Events) {}
 
   @ViewChild('dynamicList') dynamicList;
 
@@ -35,11 +37,16 @@ export class ListPage implements OnInit, OnDestroy {
       const id = params['id'];
       this.listUuid = id;
     });
-    this.listSub = this.todoservice.getTodoList(this.listUuid)
+
+    if (this.dservice.isInDisconnectedMode) {
+      this.disconnectedRefresh();
+    } else {
+      this.listSub = this.todoservice.getTodoList(this.listUuid)
       .subscribe(list => {
         this.items = list.items;
         this.listName = list.name;
       });
+    }
   }
 
   async deleteListPresentAlert() {
@@ -57,9 +64,15 @@ export class ListPage implements OnInit, OnDestroy {
           text: 'Supprimer',
           cssClass: 'dangerbtn',
           handler: data => {
-            this.ngOnDestroy();
-            this.todoservice.deleteTodoList(this.listUuid);
-            this.navCtrl.goBack();
+            if (this.dservice.isInDisconnectedMode) {
+              this.dservice.deleteTodoList(this.listUuid);
+              this.navCtrl.goBack();
+              this.publishRefreshList();
+            } else {
+              this.ngOnDestroy();
+              this.todoservice.deleteTodoList(this.listUuid);
+              this.navCtrl.goBack();
+            }
           }
         }
       ]
@@ -90,7 +103,12 @@ export class ListPage implements OnInit, OnDestroy {
           text: 'Créer',
           cssClass: 'successbtn',
           handler: data => {
-            this.todoservice.newItem(this.listUuid, data.Nom, data.Description);
+            if (this.dservice.isInDisconnectedMode) {
+              this.dservice.newItem(this.listUuid, data.Nom, data.Description);
+              this.disconnectedRefresh();
+            } else {
+              this.todoservice.newItem(this.listUuid, data.Nom, data.Description);
+            }
           }
         }
       ]
@@ -100,7 +118,12 @@ export class ListPage implements OnInit, OnDestroy {
 
   deleteItem(uuid: string) {
     this.dynamicList.closeSlidingItems();
-    this.todoservice.deleteTodoItem(this.listUuid, uuid);
+    if (this.dservice.isInDisconnectedMode) {
+      this.dservice.deleteTodoItem(this.listUuid, uuid);
+      this.disconnectedRefresh();
+    } else {
+      this.todoservice.deleteTodoItem(this.listUuid, uuid);
+    }
   }
 
   editItemContent(uuid: string) {
@@ -123,12 +146,12 @@ export class ListPage implements OnInit, OnDestroy {
   }
 
   triggerChange(item: TodoItem) {
-    this.todoservice.updateTodoItem(this.listUuid, item);
-  }
-
-  ngOnDestroy(): void {
-    this.listSub.unsubscribe();
-    this.routeSub.unsubscribe();
+    if (this.dservice.isInDisconnectedMode) {
+      this.dservice.updateTodoItem(this.listUuid, item);
+      this.disconnectedRefresh();
+    } else {
+      this.todoservice.updateTodoItem(this.listUuid, item);
+    }
   }
 
   requestPermisssion() {
@@ -137,5 +160,26 @@ export class ListPage implements OnInit, OnDestroy {
       () => console.log('Granted'),
       () => console.log('Denied')
     );
+  }
+
+  disconnectedRefresh() {
+    setTimeout( () => {
+      this.dservice.getTodoLists().then(lists => {
+        const rightList: TodoList = lists.find(list => list.uuid === this.listUuid);
+        this.items = rightList.items;
+        this.listName = rightList.name;
+      });
+    }, 150 );
+  }
+
+  publishRefreshList() {
+    this.events.publish('disconnectedRefreshList', null);
+  }
+
+  ngOnDestroy(): void {
+    if (!this.dservice.isInDisconnectedMode) {
+      this.listSub.unsubscribe();
+      this.routeSub.unsubscribe();
+    }
   }
 }

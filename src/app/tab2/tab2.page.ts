@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { NavController, Events } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 
@@ -20,17 +20,22 @@ export class Tab2Page implements OnInit {
 
   constructor(private todoservice: TodoServiceProvider, private navCtrl: NavController,
               private alertController: AlertController, private afAuth: AngularFireAuth,
-              private gservice: GoogleLoginService, private dservice: DisconnectedService) {}
+              private gservice: GoogleLoginService, private dservice: DisconnectedService,
+              private events: Events) {}
 
   ngOnInit() {
     if (this.dservice.isInDisconnectedMode) {
-      this.dservice.getTodoLists().subscribe(lists => this.lists = lists);
+      this.disconnectedRefresh();
+      this.events.subscribe('disconnectedRefreshList', () => {
+        this.disconnectedRefresh();
+      });
     } else {
       this.afAuth.user.subscribe(user => this.user = user);
       this.userMail = this.gservice.userMail;
       this.todoservice.getTodoLists().subscribe(lists => this.lists = lists);
     }
   }
+
 
   async newListPresentAlert() {
 
@@ -51,7 +56,12 @@ export class Tab2Page implements OnInit {
           text: 'Créer',
           cssClass: 'successbtn',
           handler: data => {
-            this.dservice.isInDisconnectedMode ? this.dservice.newTodoList(data.Nom) : this.todoservice.newTodoList(data.Nom);
+            if (this.dservice.isInDisconnectedMode) {
+              this.dservice.newTodoList(data.Nom);
+              this.disconnectedRefresh();
+            } else {
+              this.todoservice.newTodoList(data.Nom);
+            }
           }
         }
       ]
@@ -67,8 +77,12 @@ export class Tab2Page implements OnInit {
     return this.lists.find(list => list.uuid === uuid).items.length;
   }
 
-  deleteList(id: string) {
-    this.dservice.isInDisconnectedMode ? this.dservice.deleteTodoList(id) : this.todoservice.deleteTodoList(id);
+  disconnectedRefresh(delay?: number) {
+    setTimeout( () => {
+      this.dservice.getTodoLists().then(lists => {
+        this.lists = lists;
+      });
+    }, delay ? delay : 200 );
   }
 
 }

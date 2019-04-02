@@ -7,7 +7,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button routerLink='/tabs/tabs/tab2'></ion-back-button>
+      <ion-back-button routerLink='/tabs/tabs/tab2' (click)="publishRefreshList()"></ion-back-button>
     </ion-buttons>
     <ion-title>{{listName}}</ion-title>
     <ion-icon class="headertrashicon" name="trash" (click)="deleteListPresentAlert()"></ion-icon>
