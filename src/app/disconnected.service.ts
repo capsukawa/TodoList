@@ -112,14 +112,4 @@ export class DisconnectedService {
       this.localStorage.set('todos', todoLists);
     });
   }
-
-  async disconnectedServiceErrorPresentAlert(errorMessage: string) {
-
-    const alert = await this.alertController.create({
-      header : 'Erreur',
-      message : errorMessage,
-      buttons: ['OK']
-    });
-    return await alert.present();
-  }
 }

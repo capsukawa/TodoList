@@ -82,7 +82,7 @@ export class Tab2Page implements OnInit {
       this.dservice.getTodoLists().then(lists => {
         this.lists = lists;
       });
-    }, delay ? delay : 200 );
+    }, delay ? delay : 250 );
   }
 
 }

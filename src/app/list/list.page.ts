@@ -169,7 +169,7 @@ export class ListPage implements OnInit, OnDestroy {
         this.items = rightList.items;
         this.listName = rightList.name;
       });
-    }, 150 );
+    }, 250 );
   }
 
   publishRefreshList() {
