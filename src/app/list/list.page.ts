@@ -170,11 +170,8 @@ export class ListPage implements OnInit, OnDestroy {
               this.speechRecognition.startListening()
               .subscribe(
                 (matches: string[]) => {
-                  let res: string;
-                  for (let i = 0 ; i < matches.length ; i++) {
-                    i === 0 ? res = res + matches[i] : res = res + ' ' + matches[i];
-                  }
-                  item.desc = res;
+                  item.desc = matches[0];
+                  this.confirmItemContent(item);
                 },
                 (onerror) => this.todoservice.todoServiceErrorPresentAlert(`Une erreur s'est produite lors de la reconnaissance vocale`)
               );
