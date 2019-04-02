@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="" class="toolbar">
     <ion-title>Se connecter</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -7,7 +7,7 @@
 <ion-content padding>
   <div class="container">
     <button ion-button *ngIf="!user.uid" (click)="googleLogin()" class="homebtn">
-        Login with Google
+        Se connecter avec Google
     </button>
     <br/>
     <button ion-button *ngIf="!user.uid" (click)="disconnectedMode()" class="homebtn">

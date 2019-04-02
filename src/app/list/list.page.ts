@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TodoServiceProvider, TodoItem, TodoList } from '../todo.service';
 import { AlertController, NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
 
 @Component({
   selector: 'app-list',
@@ -23,7 +24,8 @@ export class ListPage implements OnInit, OnDestroy {
   disableSlide = false;
 
   constructor(private route: ActivatedRoute, private todoservice: TodoServiceProvider,
-     private alertController: AlertController, private navCtrl: NavController) {}
+     private alertController: AlertController, private navCtrl: NavController,
+     private speechRecognition: SpeechRecognition) {}
 
   @ViewChild('dynamicList') dynamicList;
 
@@ -127,5 +129,13 @@ export class ListPage implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.listSub.unsubscribe();
     this.routeSub.unsubscribe();
+  }
+
+  requestPermisssion() {
+    this.speechRecognition.requestPermission()
+    .then(
+      () => console.log('Granted'),
+      () => console.log('Denied')
+    );
   }
 }

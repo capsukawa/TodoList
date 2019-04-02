@@ -20,7 +20,7 @@
       <ion-item>
         <ion-card>
           <ion-card-header>
-            <ion-card-title>
+            <ion-card-title style="max-width: 88%">
               {{c.name}}
             </ion-card-title>
             <ng-container>
@@ -37,6 +37,9 @@
               </ion-textarea>
               <button (click)="confirmItemContent(c)" class="successbtn todoeditbtn">
                   <ion-icon name="checkmark"></ion-icon>
+              </button>
+              <button (click)="requestPermisssion()" class="successbtn todovoicebtn">
+                <ion-icon name="mic"></ion-icon>
               </button>
             </div>
           </ion-card-content>

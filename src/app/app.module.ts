@@ -16,6 +16,7 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { IonicStorageModule } from '@ionic/storage';
+import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,6 +29,7 @@ import { IonicStorageModule } from '@ionic/storage';
     TodoServiceProvider,
     StatusBar,
     SplashScreen,
+    SpeechRecognition,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
