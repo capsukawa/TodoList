@@ -23,11 +23,13 @@ export class Tab2Page implements OnInit {
               private gservice: GoogleLoginService, private dservice: DisconnectedService) {}
 
   ngOnInit() {
-    if (!this.dservice.isInDisconnectedMode) {
+    if (this.dservice.isInDisconnectedMode) {
+      this.dservice.getTodoLists().subscribe(lists => this.lists = lists);
+    } else {
       this.afAuth.user.subscribe(user => this.user = user);
       this.userMail = this.gservice.userMail;
       this.todoservice.getTodoLists().subscribe(lists => this.lists = lists);
-    } else { this.lists = this.dservice.getTodoLists(); }
+    }
   }
 
   async newListPresentAlert() {

@@ -30,7 +30,7 @@
     "@ionic/pro": "2.0.4",
     "@ionic/storage": "^2.2.0",
     "angularfire2": "^5.1.1",
-    "cordova-android": "7.1.4",
+    "cordova-android": "^7.1.4",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-firebase": "^2.0.5",
     "cordova-plugin-googleplus": "7.0.0",
@@ -93,7 +93,7 @@
       },
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-googleplus": {
-        "WEB_APPLICATION_CLIENT_ID": "300673643373-0eri1s1emv5gsqu99fs7dqdbqpgl1tvh.apps.googleusercontent.com",
+        "WEB_APPLICATION_CLIENT_ID": "300673643373-tbb7po8r2vg4covj746hg6h8ku9j5384.apps.googleusercontent.com",
         "PLAY_SERVICES_VERSION": "11.8.0"
       },
       "cordova-sqlite-storage": {},

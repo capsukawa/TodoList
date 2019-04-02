@@ -8,6 +8,7 @@ import uuid from 'uuid/v4';
 import { AlertController } from '@ionic/angular';
 
 import { GoogleLoginService } from './google-login.service';
+import { DisconnectedService } from './disconnected.service';
 
 
 export interface TodoList {
@@ -76,18 +77,20 @@ export class TodoServiceProvider {
   ];
 
   constructor(private db: AngularFirestore, private alertController: AlertController,
-              private gservice: GoogleLoginService) {
-    this.todosCollection = db.collection<TodoList>(this.gservice.userMail);
-    this.todosCollection$ = this.todosCollection.snapshotChanges().pipe(
-      map(actions => {
-        return actions.map(a => {
-          const data = a.payload.doc.data();
-          const id = a.payload.doc.id;
-          return { id, ...data };
-        });
-      })
-    );
-    this.todosCollection$.subscribe(todos => this.todos = todos);
+              private gservice: GoogleLoginService, private dservice: DisconnectedService) {
+    if (!this.dservice.isInDisconnectedMode) {
+      this.todosCollection = db.collection<TodoList>(this.gservice.userMail);
+      this.todosCollection$ = this.todosCollection.snapshotChanges().pipe(
+        map(actions => {
+          return actions.map(a => {
+            const data = a.payload.doc.data();
+            const id = a.payload.doc.id;
+            return { id, ...data };
+          });
+        })
+      );
+      this.todosCollection$.subscribe(todos => this.todos = todos);
+    }
   }
 
   public getTodoLists(): Observable<TodoList[]> {

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { TodoList } from './todo.service';
+import { Observable, of } from 'rxjs';
 import uuid from 'uuid/v4';
+
+import { TodoList } from './todo.service';
 
 import { Storage } from '@ionic/storage';
 
@@ -18,22 +20,20 @@ export class DisconnectedService {
     this.isInDisconnectedMode = true;
   }
 
-  public getTodoLists(): TodoList[] {
-    if (this.localStorage.length.length === 0) {
-      return [];
-    } else {
-      let store: TodoList[];
-      this.localStorage.get('todos').then(promise => store = promise);
-      return store;
-    }
+  public getTodoLists(): Observable<TodoList[]> {
+    let store: TodoList[];
+    this.localStorage.get('todos').then(promise => store = promise);
+    return of(store);
   }
 
   public newTodoList(name: string) {
-    const todos = this.getTodoLists();
+    console.log(this.localStorage.length());
     const id: string = uuid();
-    todos.push({uuid: id, name: name, items: []});
-    this.localStorage.set('todos', todos);
-    console.log('new');
+    this.getTodoLists().take(1).subscribe(todos => {
+      todos.push({uuid: id, name: name, items: []});
+      this.localStorage.set('todos', todos);
+      console.log(this.localStorage.length());
+    });
   }
 
   public deleteTodoList(id: string) {
