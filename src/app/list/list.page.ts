@@ -154,12 +154,36 @@ export class ListPage implements OnInit, OnDestroy {
     }
   }
 
-  requestPermisssion() {
-    this.speechRecognition.requestPermission()
-    .then(
-      () => console.log('Granted'),
-      () => console.log('Denied')
-    );
+  recognition(item: TodoItem) {
+    this.speechRecognition.isRecognitionAvailable().then(
+      (available: boolean) => {
+        if (available) {
+          this.speechRecognition.hasPermission().then((hasPermission: boolean) => {
+            let permissionGranted = hasPermission;
+            if (!hasPermission) {
+              this.speechRecognition.requestPermission().then(
+                () => permissionGranted = true,
+                () => permissionGranted = false
+              );
+            }
+            if (permissionGranted) {
+              this.speechRecognition.startListening()
+              .subscribe(
+                (matches: string[]) => {
+                  let res: string;
+                  for (let i = 0 ; i < matches.length ; i++) {
+                    i === 0 ? res = res + matches[i] : res = res + ' ' + matches[i];
+                  }
+                  item.desc = res;
+                },
+                (onerror) => this.todoservice.todoServiceErrorPresentAlert(`Une erreur s'est produite lors de la reconnaissance vocale`)
+              );
+            }
+          });
+        } else {
+          this.todoservice.todoServiceErrorPresentAlert('L\'appareil ne dispose pas des caractéristiques nécessaires');
+        }
+      });
   }
 
   disconnectedRefresh() {
