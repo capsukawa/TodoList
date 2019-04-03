@@ -20,6 +20,14 @@ cordova platform add android
 
 ionic cordova run android
 
+
+
+Pour les apk :
+
+   - todolist_v1.apk : APK principale du projet, mais l'authentification Google ne fonctionne pas et on ne peut donc pas utiliser les fonctionnalités Firebase.
+    
+   - todolist_noauth.apk : APK sans l'authentification Google, même si il est indiqué que si (adresse mail entrée en brut)
+
 ## L’export des règles sécurité de Firebase
 Publiques
 
